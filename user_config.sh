@@ -1,14 +1,16 @@
 # user_config.sh contains any user specific settings that need to be loaded
+quiet=
 
 # load custom scripts
 # custom functionality must be stored in this SC_DIR directory
-SC_DIR=$HOME/.config/$(whoami)_conf.d/scripts
+CONF_DIR=$HOME/.config/$(whoami)_conf.d
+SC_DIR=$CONF_DIR/scripts
 
 load_scripts() {
   scripts=($(ls $SC_DIR/*.sh))
-  
   for sc in "${scripts[@]}"; do
-    source $sc
+    source $sc;
+    [[ -z $quiet ]] && echo "> Loaded $sc";
   done
 }
 
@@ -18,41 +20,32 @@ load_scripts() {
 caffeine() {
   arr=($(pgrep caffeinate));
   if [[ ${#arr} == "0" ]]; then 
-    caffeinate -d &
-    clear
+    caffeinate -d &;
+    disown;
+    [[ -z $quiet ]] && echo "> Caffeinated system";
   fi
 }
 
-load_scripts
-caffeine
-
-# custom functionality
-
-# cleanup cleans up temporary files from the
-# home directory.
-cleanup() {
-  toDel=(
-    ~/.pylint.d
-    ~/.node_repl_history
-    ~/.DS_Store
-  )
-
-  for f in "${toDel[@]}"; do
-    if [[ -f "$f" || -d "$f" ]]; then
-      rm -rf $f
-      echo "Deleted $f"
-    fi
-  done
-  #rm -rf $toDel;
+# load_sensitive_aliases loads some private aliases, 
+# such as ssh shortcuts
+load_sensitive_aliases() {
+  sensitive=$CONF_DIR/sensitive_aliases.sh
+  if [[ -f $sensitive ]]; then
+    source $sensitive;
+    [[ -z $quiet ]] && echo "> Loaded sensitive aliases";
+  fi
 }
 
-# aliases
-alias d="docker-compose"
+[[ -z $quiet ]] && echo "Loading user configuration...";
+load_scripts;
+load_sensitive_aliases;
+caffeine;
+cleanup;
+clear;
+
+# conventient aliases
+alias d="docker"
+alias dc="docker-compose"
 alias bs="brew search"
 alias bi="brew install"
 alias bci="brew cask install"
-
-# sensitive contains some private aliases, such as ssh shortcuts
-sensitive=sensitive_aliases.sh;
-[[ -f $sensitive ]] && source $sensitive;
-

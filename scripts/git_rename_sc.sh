@@ -1,9 +1,10 @@
 git_rename() {
   if [[ $1 == "-h" || $1 == "--help" ]]; then
+    echo "git_rename renames a git branch (loacal/remote)"
     echo "Usage: git_rename <option> <old_branch_name> <new_branch_name>"
     echo "Options:"
-    echo "  -l or --local     Rename locally"
-    echo "  -r or --remote    Rename locally and remote"
+    echo "  -l or --local     Rename just locally (not committed yet)"
+    echo "  -r or --remote    Rename both locally and remote"
     return 0
   elif [[ ( $1 != "-l" && $1 != "--local" ) && ( $1 != "-r" && $1 != "--remote" ) ]]; then
     echo "error: unspecied protocol; -l (--local) or -r (--remote)"

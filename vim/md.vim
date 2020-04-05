@@ -8,4 +8,3 @@ nnoremap mdi <Esc>^i- [ ]<Space>
 nnoremap md1 <Esc>Vyp:.s/./=/g<Enter>
 " make current line level 2 header
 nnoremap md2 <Esc>Vyp:.s/./-/g<Enter>
-
