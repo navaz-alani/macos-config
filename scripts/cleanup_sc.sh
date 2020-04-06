@@ -5,6 +5,7 @@ cleanup() {
     ~/.pylint.d
     ~/.node_repl_history
     ~/.DS_Store
+    ~/.lesshst
   );
 
   for f in "${toDel[@]}"; do

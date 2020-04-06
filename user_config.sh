@@ -42,6 +42,7 @@ load_sensitive_aliases;
 caffeine;
 cleanup;
 clear;
+USER_CONF_LOADED="true";
 
 # conventient aliases
 alias d="docker"
