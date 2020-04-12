@@ -23,7 +23,7 @@ owr() {
   )
 
   for dev in "${rand_devs[@]}"; do
-    [[ -e $dev ]] && rand=$dev
+    [[ -e $dev ]] && rand=$dev && break;
   done
 
   [[ -z $rand ]] && 
