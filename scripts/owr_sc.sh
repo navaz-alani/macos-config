@@ -1,0 +1,36 @@
+#! /bin/bash
+
+owr() {
+  if [[ -z $1 || $1 == "-h" || $1 == "-help" ]]; then
+    echo "owr is a utility to overwrite the contents"
+    echo "of a file with random data from the system's"
+    echo "random device"
+    echo "usage: owr [filename]"
+    [[ -z $1 ]] && return 1;
+    return 0;
+  fi
+
+  # determine the size of the file from the output
+  # of the `ls -l` command.
+  f_size=$(ls -l $1 | awk '{print $5}')
+
+  # rand_devs are the unix random psedo-devices
+  # The first one that exists is picked and read from
+  rand_devs=(
+    /dev/random
+    /dev/urandom
+    /dev/arandom
+  )
+
+  for dev in "${rand_devs[@]}"; do
+    [[ -e $dev ]] && rand=$dev
+  done
+
+  [[ -z $rand ]] && 
+    echo "owr: err - random device not found" &&
+    return 1;
+
+  # write $f_size random bytes on file
+  dd bs=$f_size count=1 if=$rand of=$1
+}
+
