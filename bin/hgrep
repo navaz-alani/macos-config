@@ -1,0 +1,7 @@
+#! /bin/sh -x
+usage() {
+  echo "hgrep search-path"
+  exit 1
+}
+[ $# -ne 1 ] && usage
+grep $1 < ~/.config/zsh/.zsh_history

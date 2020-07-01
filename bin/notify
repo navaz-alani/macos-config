@@ -1,0 +1,9 @@
+#! /bin/bash
+usage() {
+  echo "${0##*/} title notification_message"
+  exit 1
+}
+[ $# -ne 2 ] && usage
+# use apple script to display notification, will not work on non-OSx
+script="display notification \"${2}\" with title \"${1}\" sound name \"Glass\""
+osascript -e "${script}"

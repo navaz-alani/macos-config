@@ -6,6 +6,7 @@ cleanup() {
     ~/.node_repl_history
     ~/.DS_Store
     ~/.lesshst
+    ~/.python_history
   );
 
   for f in "${toDel[@]}"; do

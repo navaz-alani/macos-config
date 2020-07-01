@@ -1,6 +1,6 @@
 #! /bin/bash
 
-prog="block"
+prog="${0##*/}"
 
 usage() {
   echo "USAGE: ${prog} -[b|u] website"
@@ -17,14 +17,14 @@ fi
 hostsFile="/etc/hosts"
 website=${2}
 
-if [ $1 = "-b" ]; then
+if [ "$1" == "-b" ]; then
   echo "0.0.0.0 ${website}" >> ${hostsFile}
   echo "0.0.0.0 www.${website}" >> ${hostsFile}
   # flush dns cache by OS
   if [ "$(uname)" = "Darwin" ]; then
     sudo killall -HUP mDNSResponder
   fi
-elif [ $1 = "-u" ]; then
+elif [ "$1" == "-u" ]; then
   tmp=$(mktemp)
   egrep -v "0.0.0.0 (www.)?${website}" < ${hostsFile} > ${tmp}
   tee < ${tmp} > ${hostsFile}
@@ -32,4 +32,3 @@ elif [ $1 = "-u" ]; then
 else
   usage
 fi
-

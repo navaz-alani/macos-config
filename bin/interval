@@ -1,0 +1,13 @@
+#! /bin/bash
+usage() {
+  echo "${0##*/} interval_length interval_count message"
+  exit 1
+}
+[ $# -ne 3 ] && usage
+[ ! ${1} -gt 0 ] || [ ! ${1} -gt 0 ] && usage
+notify "interval" "Started at $(date)"
+for i in $(seq 1 ${2}); do
+  title="interval: Completed ${i} of ${2}\n${3}"
+  sleep ${1}
+  notify "${title}" "${3}" >/dev/null 2>&1
+done

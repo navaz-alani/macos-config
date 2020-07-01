@@ -1,0 +1,29 @@
+#! /bin/bash
+
+prog=${0##*/}
+usage() {
+  echo "usage: ${prog} file command"
+  echo "${prog} watches the given file for a change and runs the given command
+  string when a change is detected."
+  exit 1
+}
+
+[ $# -ne 2 ] && usage
+
+if [ ! -e ${1} ]; then
+  echo "file to be watched does not exist"
+  exit 1
+fi
+
+# initialize hash of file to be watched
+dgst=$(md5 -q ${1})
+
+while true; do
+  ndgst=$(md5 -q ${1})
+  if [ ${ndgst} != ${dgst} ]; then
+    echo "Detected change. Rerunning..."
+    dgst=${ndgst}
+    eval ${2}
+  fi
+  sleep 1
+done

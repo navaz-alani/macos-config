@@ -1,0 +1,46 @@
+#! /bin/bash
+
+usage() {
+  echo \
+  "${0##*/} [ -h ] [ -n wave_name -b base_freq ] [ -r lower_range upper_range ]"
+  exit 1
+}
+
+# collection of average deltas by name...
+delta=3
+theta=6
+alpha=11
+beta=22
+gamma=40
+
+help() {
+  echo "This is a utility to play binaural beats using SoX"
+  echo "Here are some preset deltas:"
+  printf "delta: %-2d Hz - for deep sleep\n" ${delta}
+  printf "theta: %-2d Hz - for meditation, creativity, REM sleep\n" ${theta}
+  printf "alpha: %-2d Hz - for relaxation\n" ${alpha}
+  printf "beta:  %-2d Hz - for concentration and alertness\n" ${beta}
+  printf "gamma: %-2d Hz - for maintaining arousal when awake\n" ${gamma}
+  exit 0
+}
+
+# check if sox is installed
+play --version > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "error: sox is not installed!"
+  exit 1
+elif [ $# -eq 1 ] && [ "${1}" == "-h" ]; then
+  help
+elif [ $# -eq 4 ] && [ "${1}" == "-n" ] && [ "${3}" == "-b" ]; then
+  diff=$(eval 'echo ${'${2}'}')
+  if [ -z ${diff} ]; then
+    echo "${2} is not a valid wave name"
+    exit 1
+  fi
+  play -n synth sine ${4} sine $((${4} + ${diff}))
+elif [ $# -eq 3 ] && [ "${1}" == "-r" ]; then
+  play -n synth sine ${2} sine ${3}
+else
+  usage
+fi
+
