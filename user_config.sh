@@ -1,14 +1,16 @@
 # user_config.sh contains any user specific settings that need to be loaded
+# flag to supress output
 quiet=
 
 # load custom scripts
 # custom functionality must be stored in this SC_DIR directory
-CONF_DIR=$HOME/.config/$(whoami)_conf.d
-SC_DIR=$CONF_DIR/scripts
+CONF_DIR="${HOME}/.config/$(whoami)_conf.d"
+SC_DIR="${CONF_DIR}/scripts"
+# todo: migrate programs from functions to scripts...
+PATH=$PATH:/Users/navaz/.config/navaz_conf.d/bin
 
 load_scripts() {
-  scripts=($(ls $SC_DIR/*.sh))
-  for sc in "${scripts[@]}"; do
+  for sc in $(ls $SC_DIR/*.sh); do
     source $sc;
     [[ -z $quiet ]] && echo "> Loaded $sc";
   done
@@ -19,7 +21,7 @@ load_scripts() {
 # of `caffeinate` and starts one if none is running.
 caffeine() {
   arr=($(pgrep caffeinate));
-  if [[ ${#arr} == "0" ]]; then 
+  if [[ ${#arr} -eq 0 ]]; then 
     caffeinate -d &;
     disown;
     [[ -z $quiet ]] && echo "> Caffeinated system";
@@ -45,8 +47,20 @@ clear;
 USER_CONF_LOADED="true";
 
 # conventient aliases
+## docker
 alias d="docker"
 alias dc="docker-compose"
+## brew
 alias bs="brew search"
 alias bi="brew install"
 alias bci="brew cask install"
+## default editor
+alias vi=nvim
+alias vim=nvim
+## wget
+# redirect config file to keep home dir clean
+alias wget="wget --hsts-file=~/.config/wget/.wget-hsts"
+
+# CONFIG
+EDITOR=nvim
+

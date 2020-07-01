@@ -1,3 +1,6 @@
-navaz.ovpn
-wall.png
 sensitive_aliases.sh
+bin/retest
+bin/produceOutputs
+bin/runSuite
+bin/mynl
+bin/ls-tst
