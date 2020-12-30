@@ -1,0 +1,15 @@
+#!/bin/bash -x
+# backup nvim config
+VIM_CONF=~/.config/nvim/init.vim
+VIM_CONF_BU=$CONF_DIR/sync/nvim/init.vim
+if [ -f ${VIM_CONF} ]; then
+  [ ! -f ${VIM_CONF_BU} ] && touch ${VIM_CONF_BU}
+  cp ${VIM_CONF} ${VIM_CONF_BU}
+fi
+# backup zsh config
+ZSH_CONF=~/.config/zsh/.zshrc
+ZSH_CONF_BU=$CONF_DIR/sync/zsh/.zshrc
+if [ -f ${ZSH_CONF} ]; then
+  [ ! -f ${ZSH_CONF_BU} ] && touch ${ZSH_CONF_BU}
+  cp ${ZSH_CONF} ${ZSH_CONF_BU}
+fi
