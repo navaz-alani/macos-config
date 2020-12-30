@@ -1,0 +1,36 @@
+#! /bin/bash
+
+usage() {
+  echo "${0##*/} src dst interval"
+  echo "interval is how often to backup. 0 for just once"
+  echo "reminder: mind the trailing slash for src directories"
+  exit 1
+}
+[ $# -ne 3 ] && usage
+nonexistent() {
+  echo "\"${0}\" does not exist"
+  exit 1
+}
+interval_err() {
+  echo "error: expected 0 <= interval"
+  exit 1
+}
+src=${1}
+dst=${2}
+int=${3}
+[ ! -d ${1} ] && nonexistent ${1}
+[ ! -d ${2} ] && nonexistent ${2}
+[ ${int} -lt 0 ] && interval_err
+
+run_backup() {
+  rsync -av --delete --progress ${src} ${dst}
+}
+[ ${3} -eq 0 ] && run_backup && exit 0
+
+while true; do
+  run_backup
+  echo ">>"
+  echo ">> backup run at $(date)"
+  echo ">>"
+  sleep ${int}
+done
