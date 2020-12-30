@@ -1,0 +1,29 @@
+#!/bin/bash
+usage() {
+  echo "${0##*/} session-dur num-sessions break-dur"
+  exit 1
+}
+arg_int() {
+  echo "arguments must be integers >= 0 and none may be omitted"
+  exit 1
+}
+
+[ $# -ne 3 ] && usage
+
+for arg in "$@"; do
+  if ! [[ "${arg}" =~ ^\+?[0-9]+$ ]]; then arg_int; fi
+done
+
+session_dur=${1}
+num_sessions=${2}
+break_dur=${3}
+
+for s in $(seq 1 ${num_sessions}); do
+  # start a session
+  notify "Pomodoro" "Started session ${s}/${num_sessions}"
+  sleep ${session_dur}
+  notify "Pomodoro" "Finished session ${s}/${num_sessions}"
+
+  # start break
+  [ ${s} -ne ${num_sessions} ] && sleep ${break_dur}
+done
