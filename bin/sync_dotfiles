@@ -1,15 +1,25 @@
-#!/bin/bash -x
-# backup nvim config
-VIM_CONF=~/.config/nvim/init.vim
-VIM_CONF_BU=$CONF_DIR/sync/nvim/init.vim
-if [ -f ${VIM_CONF} ]; then
-  [ ! -f ${VIM_CONF_BU} ] && touch ${VIM_CONF_BU}
-  cp ${VIM_CONF} ${VIM_CONF_BU}
-fi
-# backup zsh config
-ZSH_CONF=~/.config/zsh/.zshrc
-ZSH_CONF_BU=$CONF_DIR/sync/zsh/.zshrc
-if [ -f ${ZSH_CONF} ]; then
-  [ ! -f ${ZSH_CONF_BU} ] && touch ${ZSH_CONF_BU}
-  cp ${ZSH_CONF} ${ZSH_CONF_BU}
-fi
+#!/bin/bash
+
+# sync_df syncs dotfile ${1} to ${2}.
+# If ${1} does not exitst, then nothing is done.
+# If ${2} does not exist, all intermediate directories to ${2} are created, and
+# so is the file ${2}.
+# When ${1} exists and ${2} has been created, then ${1} is copied to ${2}.
+sync_df() {
+  src=${1}; dst=${2};
+  if [ -f ${src} ]; then
+    if [ ! -f ${dst} ]; then
+      mkdir -p ${dst%/*};
+      touch ${dst};
+    fi
+    cp ${src} ${dst};
+  fi
+}
+
+sync_df "~/.config/zsh/.zshrc"     "${CONF_DIR}/sync/zsh/.zshrc";
+sync_df "~/.config/nvim/init.vim"  "${CONF_DIR}/sync/nvim/init.vim";
+
+# commit dotfile sync
+cd "${CONF_DIR}";
+git diff --exit-code sync;
+[ $? -ne 0 ] && git add sync && git commit -m "automated sync @ $(date)";
