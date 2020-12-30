@@ -1,0 +1,3 @@
+#!/bin/bash
+printf "Private IP: %s\n" $(ifconfig  en0 | egrep netmask | awk '{print $2}')
+printf "Public IP:  %s\n" $(curl -s ifconfig.me)
