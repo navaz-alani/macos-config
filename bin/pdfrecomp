@@ -1,0 +1,33 @@
+#! /bin/bash
+clean_up() {
+  clean_latex
+}
+trap clean_up INT
+
+usage() {
+  echo "${0##*/} <file>.tex"
+  exit 1
+}
+fileNonexistent() {
+  echo "file \"${1}\" does not exist"
+  exit 1
+}
+wrongFile() {
+  echo "file \"${1}\" is not a .tex file"
+  exit 1
+}
+[ $# -ne 1 ] && usage
+[ ! -f ${1} ] && fileNonexistent ${1}
+ext=${1##*.}
+[ ${ext} != "tex" ] && wrongFile ${1}
+pdfTarget=${1%%.tex}.pdf
+if [ ! -f ${pdfTarget} ]; then
+  echo "Compiled PDF not found. Running initial compile."
+  pdflatex ${1}
+  echo "Opening compiled PDF"
+  open ${pdfTarget}
+else
+  echo "Running initial compile."
+  pdflatex ${1}
+fi
+recomp ${1} "pdflatex ${1}"
