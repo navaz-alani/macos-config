@@ -1,3 +1,6 @@
 #!/bin/bash
 
-rm *.{aux,log}
+for f in $(echo *.tex); do
+  f_name=${f%%.tex}
+  rm -rf ${f_name}.{out,aux,log}
+done
