@@ -1,0 +1,12 @@
+#!/bin/bash
+
+[ $# -ne 2 ] && echo "usage: ${0##*/} <pdf> <parts-file>" && exit 1;
+
+driver=pdftk
+which ${driver} > /dev/null 2>&1
+[ $? -ne 0 ] && echo "${0##*/} error: ${driver} not installed" && exit 1;
+
+while read p; do
+  a=($(echo $p))
+  ${driver} ${1} cat ${a[1]} output ${a[0]}
+done < ${2}
